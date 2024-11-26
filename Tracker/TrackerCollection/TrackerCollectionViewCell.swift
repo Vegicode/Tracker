@@ -109,7 +109,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             
             // Название трекера
             titleLabel.centerXAnchor.constraint(equalTo: colorView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 8),
+            titleLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -8),
             titleLabel.leadingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -12),
             

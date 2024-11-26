@@ -81,7 +81,7 @@ final class TrackersViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Что будем отслеживать?"
         label.font =
-            .systemFont(ofSize: 20)
+            .systemFont(ofSize: 12)
         label.textColor = .black
         label.sizeToFit()
         
@@ -150,9 +150,10 @@ final class TrackersViewController: UIViewController {
         addTrackerButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         addTrackerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        trackerLabel.leadingAnchor.constraint(equalTo: addTrackerButton.leadingAnchor, constant: 10).isActive = true
-        trackerLabel.topAnchor.constraint(equalTo: addTrackerButton.topAnchor, constant: 50).isActive = true
-        
+        trackerLabel.topAnchor.constraint(equalTo: addTrackerButton.bottomAnchor).isActive = true
+        trackerLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        trackerLabel.heightAnchor.constraint(equalToConstant: 41).isActive = true
+
         datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
         datePicker.centerYAnchor.constraint(equalTo: addTrackerButton.centerYAnchor).isActive = true
         
@@ -327,6 +328,15 @@ extension TrackersViewController: UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerCategoryHeaderView.identifier, for: indexPath) as? TrackerCategoryHeaderView else { return UICollectionReusableView() }
+            let category = filteredCategories[indexPath.section]
+            header.configure(with: category.title)
+            return header
+        }
+        return UICollectionReusableView()
+    }
     
 }
 

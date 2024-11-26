@@ -122,6 +122,10 @@ extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.switchControl.isOn = selectedDays.contains(weekday)
         
+        cell.selectionStyle = .none
+        
+        cell.backgroundColor = .backgroundDayYp
+        
         return cell
     }
 

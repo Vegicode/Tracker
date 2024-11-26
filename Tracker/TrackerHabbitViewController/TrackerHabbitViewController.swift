@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TrackerHabbitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class TrackerHabbitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
     // MARK: - UI Elements
     private lazy var habbitTitle: UILabel = {
@@ -160,6 +160,7 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        titleTextField.delegate = self
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
         optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "optionCell")
@@ -172,30 +173,31 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
 
         updateCollectionViewHeights()
         
+        
     }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        titleTextField.resignFirstResponder()
+        return true
+    }
+   
     
     @objc private func textFieldDidChange() {
         guard let text = titleTextField.text else { return }
         
-        if text.count > 38 {
-            maxLengthLabel.isHidden = false
+        if !text.isEmpty && !selectedSchedule.isEmpty && selectedEmoji != nil && selectedColor != nil && text.count <= 38 {
+            createButton.isEnabled = true
+            createButton.backgroundColor = .blackDayYp
+            
+        } else {
             createButton.isEnabled = false
             createButton.backgroundColor = .grayYp
-            
-            // Меняем отступ на 32, если лейбл виден
-            optionsTableViewTopConstraint.constant = 62
-        } else {
-            maxLengthLabel.isHidden = true
-            createButton.isEnabled = !text.isEmpty
-            createButton.backgroundColor = text.isEmpty ? .grayYp : .blackDayYp
-            
-            // Меняем отступ на 24, если лейбл скрыт
-            optionsTableViewTopConstraint.constant = 24
         }
         
-        // Анимируем изменение отступа
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        if text.count > 38 {
+            maxLengthLabel.isHidden = false
+        }else{
+            maxLengthLabel.isHidden = true
+           
         }
     }
     
@@ -207,6 +209,7 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
         guard let title = titleTextField.text, !title.isEmpty,
               let color = selectedColor,
               let emoji = selectedEmoji, !selectedSchedule.isEmpty
+            
         else {
             return
         }
@@ -225,15 +228,15 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
         let itemsPerRow: CGFloat = 6
         let interItemSpacing: CGFloat = 5
 
-        // Определяем количество строк
+        
         let emojiRows = ceil(CGFloat(emojis.count) / itemsPerRow)
         let colorRows = ceil(CGFloat(colors.count) / itemsPerRow)
         
-        // Рассчитываем итоговую высоту коллекции
+       
         let emojiHeight = emojiRows * itemHeight + max(emojiRows - 1, 0) * interItemSpacing
         let colorHeight = colorRows * itemHeight + max(colorRows - 1, 0) * interItemSpacing
         
-        // Устанавливаем высоты
+     
         emojiCollectionView.heightAnchor.constraint(equalToConstant: emojiHeight).isActive = true
         colorCollectionView.heightAnchor.constraint(equalToConstant: colorHeight).isActive = true
     }
@@ -533,3 +536,5 @@ extension TrackerHabbitViewController: ScheduleViewControllerDelegate {
         optionsTableView.reloadData()
     }
 }
+
+

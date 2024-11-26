@@ -7,10 +7,10 @@
 
 import UIKit
 
-class TrackerCategoryHeaderView: UICollectionReusableView {
+final class TrackerCategoryHeaderView: UICollectionReusableView {
     static let identifier = "TrackerCategoryHeaderView"
     
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false

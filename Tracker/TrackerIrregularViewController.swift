@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TrackerIrregularEventViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class TrackerIrregularEventViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
     private lazy var  irRegularTitle: UILabel = {
         let label = UILabel()
@@ -103,7 +103,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         return view
     }()
     
-    // Кнопка "Создать"
+    
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Создать", for: .normal)
@@ -115,7 +115,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         return button
     }()
     
-    // Кнопка "Отменить"
+  
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Отменить", for: .normal)
@@ -155,6 +155,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        titleTextField.delegate = self
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
         optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "optionCell")
@@ -163,6 +164,11 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         updateCollectionViewHeights()
         setupViewsWithoutStackView()
     }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
 
     func updateCollectionViewHeights() {
         let itemHeight: CGFloat = 52
@@ -186,21 +192,20 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
     @objc private func textFieldDidChange() {
         guard let text = titleTextField.text else { return }
         
-        if text.count > 38 {
-            maxLengthLabel.isHidden = false
+        if !text.isEmpty && selectedEmoji != nil && selectedColor != nil && text.count <= 38 {
             createButton.isEnabled = true
             createButton.backgroundColor = .blackDayYp
-            optionsTableViewTopConstraint.constant = 62
-        } else {
-            maxLengthLabel.isHidden = true
-            createButton.isEnabled = !text.isEmpty
-            createButton.backgroundColor = text.isEmpty ? .grayYp : .blackDayYp
             
-            optionsTableViewTopConstraint.constant = 24
+        } else {
+            createButton.isEnabled = false
+            createButton.backgroundColor = .grayYp
         }
         
-        UIView.animate(withDuration: 0.25){
-            self.view.layoutIfNeeded()
+        if text.count > 38 {
+            maxLengthLabel.isHidden = false
+        }else{
+            maxLengthLabel.isHidden = true
+           
         }
     }
     
@@ -392,8 +397,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0
     }
-    
-    // Убираем отступы между ячейками
+ 
     func tableView(_ tableView: UITableView, layoutMarginsForItemAt indexPath: IndexPath) -> UIEdgeInsets {
         return UIEdgeInsets.zero
     }
@@ -422,7 +426,7 @@ extension TrackerIrregularEventViewController: UICollectionViewDataSource {
                 return UICollectionViewCell()
             }
             cell.titleLabel.text = emojis[indexPath.row]
-            cell.colorView.isHidden = true // Скрываем colorView для Emoji ячейки
+            cell.colorView.isHidden = true
             return cell
         } else if collectionView == colorCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as? TrackerHabbitViewCell else {
