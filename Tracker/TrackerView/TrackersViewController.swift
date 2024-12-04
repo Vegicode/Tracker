@@ -354,7 +354,7 @@ extension TrackersViewController: TrackerCellDelegate {
                 .flatMap({ $0.trackers })
                 .first(where: { $0.id == id }) else { return }
 
-        // Привычка: Добавляем запись за текущий день
+        
         if tracker.type == .habbit {
             let isAlreadyCompleted = completedTrackers.contains {
                 $0.trackerID == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date)
