@@ -23,7 +23,7 @@ final class DatabaseManager {
         
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
-                fatalError("Не удалось загрузить хранилище: \(error), \(error.userInfo)")
+                assertionFailure("Не удалось загрузить хранилище: \(error), \(error.userInfo)")
             }
         }
         return container
