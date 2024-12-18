@@ -7,7 +7,13 @@
 
 import UIKit
 
-final class TrackerIrregularEventViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
+final class TrackerIrregularEventViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+   
+    private var categoryTitle: String? = "Важное"
+    weak var trackerHabbitDelegate: TrackerHabbitViewControllerDelegate?
+    private var optionsTableViewTopConstraint: NSLayoutConstraint!
+    private var selectedEmoji: String?
+    private var selectedColor: UIColor?
     
     private lazy var  irRegularTitle: UILabel = {
         let label = UILabel()
@@ -147,15 +153,11 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
     private let colors: [UIColor] = [
         .colorSelection1, .colorSelection2, .colorSelection3, .colorSelection4, .colorSelection5, .colorSelection6, .colorSelection7, .colorSelection8, .colorSelection9, .colorSelection10, .colorSelection11, .colorSelection12, .colorSelection13, .colorSelection14, .colorSelection15, .colorSelection16, .colorSelection17, .colorSelection18
     ]
-    private var optionsTableViewTopConstraint: NSLayoutConstraint!
-    private var selectedEmoji: String?
-    private var selectedColor: UIColor?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        titleTextField.delegate = self
         optionsTableView.dataSource = self
         optionsTableView.delegate = self
         optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "optionCell")
@@ -214,19 +216,26 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
     }
     
     @objc private func didTapCreateButton() {
-        guard let title = titleTextField.text, !title.isEmpty,
+        guard
+              let categoryTitle,
+              let title = titleTextField.text, !title.isEmpty,
               let color = selectedColor,
-              let emoji = selectedEmoji
-        else {
-            return
+              let emoji = selectedEmoji else { return }
+
+        let newTracker = Tracker(
+            id: UUID(),
+            title: title,
+            color: color,
+            emoji: emoji,
+            schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday],
+            type: .event
+        )
+        if trackerHabbitDelegate == nil {
+            print("⚠️ Делегат delegate2 не установлен")
         }
-        
-        let newTracker = Tracker(id: UUID(), title: title, color: color, emoji: emoji, schedule: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday], type: .event)
 
-        NotificationCenter.default.post(name: .didCreateNewTracker, object: newTracker)
-        
-        print("Создаю трекер с title: \(title), emoji: \("😀"), schedule: \(newTracker.schedule)")
-
+        trackerHabbitDelegate?.didTapCreateButton(categoryTitle: categoryTitle, trackerToAdd: newTracker)
+        print("Создан новый трекер: \(newTracker)")
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 

@@ -8,6 +8,8 @@
 import UIKit
 
 class TrackerCreateViewController: UIViewController {
+    weak var trackerViewController: TrackersViewController?
+    
     private let trackerCreateLabel: UILabel = {
         let label = UILabel()
         label.text = "Создание трекера"
@@ -81,21 +83,36 @@ class TrackerCreateViewController: UIViewController {
     
     
     @objc func didHabitButtonTap(){
-        let trackerCreateVC = TrackerHabbitViewController()
+        guard let trackerVC = trackerViewController else {
+            print("TrackerViewController не установлен")
+            return
+        }
+        let trackerHabbitVC = trackerVC.trackerHabbitViewController
         if let navigationController = self.navigationController {
-            navigationController.pushViewController(trackerCreateVC, animated: true)
+            navigationController.pushViewController(trackerHabbitVC, animated: true)
+            print("Перешли с помощью pushViewController")
         } else {
-            trackerCreateVC.modalPresentationStyle = .pageSheet
-            present(trackerCreateVC, animated: true, completion: nil)
+            trackerHabbitVC.modalPresentationStyle = .pageSheet
+            present(trackerHabbitVC, animated: true) {
+                print("Контроллер представлен модально")
+            }
         }
     }
     @objc func didIrregEventButtonTap() {
-        let trackerCreateVC = TrackerIrregularEventViewController()
+        guard let trackerVC = trackerViewController else {
+            print("TrackerViewController не установлен")
+            return
+        }
+        
+        let trackerHabbitVC = trackerVC.trackerIrregularEventViewController
         if let navigationController = self.navigationController {
-            navigationController.pushViewController(trackerCreateVC, animated: true)
+            navigationController.pushViewController(trackerHabbitVC, animated: true)
+            print("Перешли с помощью pushViewController")
         } else {
-            trackerCreateVC.modalPresentationStyle = .pageSheet
-            present(trackerCreateVC, animated: true, completion: nil)
+            trackerHabbitVC.modalPresentationStyle = .pageSheet
+            present(trackerHabbitVC, animated: true)
+            print("Контроллер представлен модально")
+            
         }
     }
     
