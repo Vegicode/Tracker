@@ -63,7 +63,7 @@ final class TrackersViewController: UIViewController {
         )
         searchBar.attributedPlaceholder = attributedPlaceholder
         searchBar.delegate = self
-      
+        
         return searchBar
     }()
     
@@ -71,7 +71,7 @@ final class TrackersViewController: UIViewController {
         let image = UIImageView(image: UIImage(named: "1"))
         image.contentMode = .scaleAspectFit
         image.translatesAutoresizingMaskIntoConstraints = false
-
+        
         return image
         
     }()
@@ -95,35 +95,52 @@ final class TrackersViewController: UIViewController {
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
         return collectionView
         
     }()
     
-    var categories: [TrackerCategory] = [
-        TrackerCategory(title: "Обязательно", trackers: [
-            Tracker(id: UUID(), title: "Поесть курицу", color: .colorSelection1, emoji: "🍔", schedule: [.monday], type: .habbit),
-            Tracker(id: UUID(), title: "Попить воду", color: .colorSelection2, emoji: "😺", schedule: [.monday], type: .habbit),
-            Tracker(id: UUID(), title: "Поспать", color: .colorSelection5, emoji: "🌸", schedule: [.monday], type: .habbit),
-            
-            Tracker(id: UUID(), title: "Не забыть сьездить на пары", color: .colorSelection8, emoji: "❤️", schedule: [.tuesday], type: .habbit),
-        ]),
-        TrackerCategory(title: "Невероятно", trackers: [
-            Tracker(id: UUID(), title: "Поцеловать собаку и кота перед выходом", color: .colorSelection12, emoji: "🐶", schedule: [.monday, .wednesday, .tuesday], type: .habbit)
-        ])
-    ]
-    
+    //    var categories: [TrackerCategory] = [
+    //        TrackerCategory(title: "Обязательно", trackers: [
+    //            Tracker(id: UUID(), title: "Поесть курицу", color: .colorSelection1, emoji: "🍔", schedule: [.monday], type: .habbit),
+    //            Tracker(id: UUID(), title: "Попить воду", color: .colorSelection2, emoji: "😺", schedule: [.monday], type: .habbit),
+    //            Tracker(id: UUID(), title: "Поспать", color: .colorSelection5, emoji: "🌸", schedule: [.monday], type: .habbit),
+    //
+    //            Tracker(id: UUID(), title: "Не забыть сьездить на пары", color: .colorSelection8, emoji: "❤️", schedule: [.tuesday], type: .habbit),
+    //        ]),
+    //        TrackerCategory(title: "Невероятно", trackers: [
+    //            Tracker(id: UUID(), title: "Поцеловать собаку и кота перед выходом", color: .colorSelection12, emoji: "🐶", schedule: [.monday, .wednesday, .tuesday], type: .habbit)
+    //        ])
+    //    ]
+    var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var currentDate: Date = Date()
+    private let trackerCategoryStore = TrackerCategoryStore()
+    private var trackerStore = TrackerStore()
+    private var trackerRecordStore = TrackerRecordStore()
+    lazy var trackerHabbitViewController: TrackerHabbitViewController = {
+        let viewController = TrackerHabbitViewController()
+        viewController.trackerHabbitDelegate = self
+        return viewController
+    }()
+    lazy var trackerIrregularEventViewController: TrackerIrregularEventViewController = {
+        let viewController = TrackerIrregularEventViewController()
+        viewController.trackerHabbitDelegate = self
+        return viewController
+    }()
+    weak var trackerHabbitDelegate: TrackerHabbitViewControllerDelegate?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveNewTrackerNotification(_ :)), name: .didCreateNewTracker, object: nil)
+        trackerStore.delegate = self
+        getAllCategories()
+        if categories.isEmpty {
+            print("Load Mock Data")
+            trackerCategoryStore.createCategory(with: TrackerCategory(title: "Важное", trackers: []))
+        }
+        getCompletedTrackers()
         setupTrackerView()
         updateUI()
         setupCollectionView()
@@ -134,11 +151,11 @@ final class TrackersViewController: UIViewController {
         view.addSubview(trackerLabel)
         view.addSubview(datePicker)
         view.addSubview(trackerSearchBar)
-
+        
         view.addSubview(emptyPlaceholderImageView)
         view.addSubview(emptyPlaceholderLabel)
         view.addSubview(collectionView)
-
+        
         setupConstraints()
     }
     
@@ -153,7 +170,7 @@ final class TrackersViewController: UIViewController {
         trackerLabel.topAnchor.constraint(equalTo: addTrackerButton.bottomAnchor).isActive = true
         trackerLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
         trackerLabel.heightAnchor.constraint(equalToConstant: 41).isActive = true
-
+        
         datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
         datePicker.centerYAnchor.constraint(equalTo: addTrackerButton.centerYAnchor).isActive = true
         
@@ -174,6 +191,22 @@ final class TrackersViewController: UIViewController {
         collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    }
+    
+    private func getAllCategories() {
+        categories = trackerCategoryStore.fetchAllCategories()
+        print("categories", categories)
+    }
+    
+    private func getCompletedTrackers(){
+        completedTrackers = trackerRecordStore.fetchAllRecords()
+        print("completedTrackers", completedTrackers)
+    }
+    
+    
+    private func updateUI() {
+        collectionView.reloadData()
+        datePickerValueChanged()
     }
     
     @objc private func didReceiveNewTrackerNotification(_ notification: Notification){
@@ -205,10 +238,7 @@ final class TrackersViewController: UIViewController {
         updateUI()
     }
     
-    private func updateUI() {
-        collectionView.reloadData()
-        datePickerValueChanged()
-    }
+    
     
     @objc private func datePickerValueChanged(){
         reloadFilteredCategories()
@@ -433,8 +463,44 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension Notification.Name {
-    static let didCreateNewTracker = Notification.Name("didCreateNewTracker")
+extension TrackersViewController: TrackerHabbitViewControllerDelegate {
+    func didTapCreateButton(categoryTitle: String, trackerToAdd: Tracker) {
+        print("🛠 Метод didTapCreateButton вызван с categoryTitle: \(categoryTitle)")
+        guard let categoryIndex = categories.firstIndex(where: { $0.title == categoryTitle }) else {
+            print("Категория не найдена: \(categoryTitle)")
+            return
+        }
+        dismiss(animated: true)
+        do {
+            try trackerStore.addNewTracker(trackerToAdd, toCategory: categories[categoryIndex])
+                getAllCategories()
+                getCompletedTrackers()
+                reloadFilteredCategories()
+            
+        } catch {
+            print("Ошибка добавления трекера: \(error.localizedDescription)")
+        }
+    }
+    
+    func didTapCancelButton() {
+        dismiss(animated: true)
+    }
 }
+
+extension TrackersViewController: TrackerStoreDelegate {
+    func didUpdate(_ update: TrackerStoreUpdate) {
+        collectionView.performBatchUpdates {
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+
+            collectionView.insertItems(at: insertedIndexPaths)
+            collectionView.deleteItems(at: deletedIndexPaths)
+        } completion: { _ in
+            self.collectionView.reloadData()
+        }
+    }
+}
+
+
 
 

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		501AFECF2D0AD92D0022F8D1 /* StoreErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501AFECE2D0AD92D0022F8D1 /* StoreErrors.swift */; };
+		501AFED32D0AEE520022F8D1 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501AFED22D0AEE520022F8D1 /* DataBaseManager.swift */; };
+		50322A8F2D10A0DA0010A38E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50322A8E2D10A0DA0010A38E /* Constants.swift */; };
 		504141012CFE378700A75A58 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141002CFE378700A75A58 /* TrackerStore.swift */; };
 		504141032CFEEE4500A75A58 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141022CFEEE4500A75A58 /* TrackerCategoryStore.swift */; };
 		504141052CFEEE9400A75A58 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141042CFEEE9400A75A58 /* TrackerRecordStore.swift */; };
@@ -37,6 +40,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		501AFECE2D0AD92D0022F8D1 /* StoreErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreErrors.swift; sourceTree = "<group>"; };
+		501AFED22D0AEE520022F8D1 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
+		50322A8E2D10A0DA0010A38E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		504141002CFE378700A75A58 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		504141022CFEEE4500A75A58 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		504141042CFEEE9400A75A58 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
@@ -85,6 +91,8 @@
 				504141002CFE378700A75A58 /* TrackerStore.swift */,
 				504141022CFEEE4500A75A58 /* TrackerCategoryStore.swift */,
 				504141042CFEEE9400A75A58 /* TrackerRecordStore.swift */,
+				501AFED22D0AEE520022F8D1 /* DataBaseManager.swift */,
+				501AFECE2D0AD92D0022F8D1 /* StoreErrors.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -110,6 +118,7 @@
 		508916052CEE491900AADB31 /* TrackerHabbitViewController */ = {
 			isa = PBXGroup;
 			children = (
+				508916042CEE491900AADB31 /* TrackerHabbitViewController.swift */,
 				508916032CEE491900AADB31 /* TrackerHabbitViewCell.swift */,
 				5089162E2CEE651F00AADB31 /* PaddedTextField.swift */,
 			);
@@ -119,8 +128,8 @@
 		508916082CEE491900AADB31 /* TrackerView */ = {
 			isa = PBXGroup;
 			children = (
-				508916232CEE5B9300AADB31 /* TrackerBody */,
 				508916072CEE491900AADB31 /* TrackersViewController.swift */,
+				508916232CEE5B9300AADB31 /* TrackerBody */,
 			);
 			path = TrackerView;
 			sourceTree = "<group>";
@@ -128,7 +137,6 @@
 		508916112CEE491900AADB31 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				504140FF2CFE376F00A75A58 /* Stores */,
 				508915FF2CEE491900AADB31 /* ScheduleViewController */,
 				508916022CEE491900AADB31 /* TrackerCollection */,
 				508916052CEE491900AADB31 /* TrackerHabbitViewController */,
@@ -142,7 +150,6 @@
 				5089160F2CEE491900AADB31 /* TrackerCreateViewController.swift */,
 				508916102CEE491900AADB31 /* TrackerIrregularViewController.swift */,
 				508F97942CF7883800795D14 /* CoreData */,
-				508F97A92CF79D9900795D14 /* Transformators */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -151,7 +158,6 @@
 			isa = PBXGroup;
 			children = (
 				508916242CEE5BDA00AADB31 /* Tracker.swift */,
-				508916042CEE491900AADB31 /* TrackerHabbitViewController.swift */,
 				508916262CEE5BFC00AADB31 /* TrackerCategory.swift */,
 				508916282CEE5C1100AADB31 /* TrackerRecord.swift */,
 				5089162A2CEE5C3100AADB31 /* TrackerType.swift */,
@@ -163,7 +169,9 @@
 		508F97942CF7883800795D14 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				504140FF2CFE376F00A75A58 /* Stores */,
 				508F97992CF7892400795D14 /* Model.xcdatamodeld */,
+				508F97A92CF79D9900795D14 /* Transformators */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -181,6 +189,7 @@
 		50A2724A2CCF818B00D8FEB9 = {
 			isa = PBXGroup;
 			children = (
+				50322A8E2D10A0DA0010A38E /* Constants.swift */,
 				508916112CEE491900AADB31 /* Tracker */,
 				508916222CEE4B8D00AADB31 /* Tracker.app */,
 			);
@@ -262,7 +271,10 @@
 				508916132CEE491900AADB31 /* SwitchTableViewCell.swift in Sources */,
 				508916142CEE491900AADB31 /* TrackerCategoryHeaderView.swift in Sources */,
 				508916152CEE491900AADB31 /* TrackerCollectionViewCell.swift in Sources */,
+				501AFED32D0AEE520022F8D1 /* DataBaseManager.swift in Sources */,
+				50322A8F2D10A0DA0010A38E /* Constants.swift in Sources */,
 				508916162CEE491900AADB31 /* TrackerHabbitViewCell.swift in Sources */,
+				501AFECF2D0AD92D0022F8D1 /* StoreErrors.swift in Sources */,
 				504141052CFEEE9400A75A58 /* TrackerRecordStore.swift in Sources */,
 				508916172CEE491900AADB31 /* TrackerHabbitViewController.swift in Sources */,
 				5089162D2CEE5C4900AADB31 /* Weekday.swift in Sources */,
