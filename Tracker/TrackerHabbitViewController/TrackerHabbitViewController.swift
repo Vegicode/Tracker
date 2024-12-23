@@ -179,25 +179,20 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
     @objc private func textFieldDidChange() {
         guard let text = titleTextField.text else { return }
         
-        if text.count > 38 {
-            maxLengthLabel.isHidden = false
+        if !text.isEmpty && selectedEmoji != nil && selectedColor != nil && text.count <= 38 {
+            createButton.isEnabled = true
+            createButton.backgroundColor = .blackDayYp
+            
+        } else {
             createButton.isEnabled = false
             createButton.backgroundColor = .grayYp
-            
-            // Меняем отступ на 32, если лейбл виден
-            optionsTableViewTopConstraint?.constant = 62
-        } else {
-            maxLengthLabel.isHidden = true
-            createButton.isEnabled = !text.isEmpty
-            createButton.backgroundColor = text.isEmpty ? .grayYp : .blackDayYp
-            
-            // Меняем отступ на 24, если лейбл скрыт
-            optionsTableViewTopConstraint?.constant = 24
         }
         
-        // Анимируем изменение отступа
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        if text.count > 38 {
+            maxLengthLabel.isHidden = false
+        } else {
+            maxLengthLabel.isHidden = true
+           
         }
     }
     

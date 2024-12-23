@@ -6,16 +6,20 @@
 //
 
 import CoreData
+import UIKit
 
 final class TrackerRecordStore {
-    private var context: NSManagedObjectContext {
-            return DatabaseManager.shared.context
-        }
+    private var context: NSManagedObjectContext
     private let trackerStore = TrackerStore()
     
-    static let shared = TrackerRecordStore()
-    init() {}
-    
+    init(context: NSManagedObjectContext = {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Unable to retrieve AppDelegate")
+        }
+        return appDelegate.persistentContainer.viewContext
+    }()) {
+        self.context = context
+    }
     
     // MARK: FUNCTIONS
     func addTrackerRecord(with trackerRecord: TrackerRecord) {
@@ -24,16 +28,15 @@ final class TrackerRecordStore {
         trackerRecordEntity.date = trackerRecord.date
         
         let trackerCoreData = trackerStore.getTrackerCoreData(by: trackerRecord.trackerID)
-        trackerRecordEntity.trackers  = trackerCoreData
+        trackerRecordEntity.trackers = trackerCoreData
         
         do {
             try context.save()
-            print("Record added: \(trackerRecord)")
+            print("✅ Record added: \(trackerRecord)")
         } catch {
-            print("Failed to save tracker record: \(error)")
+            print("❌ Failed to save tracker record: \(error)")
         }
     }
-    
     
     func fetchAllRecords() -> [TrackerRecord] {
         let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
@@ -41,15 +44,13 @@ final class TrackerRecordStore {
         do {
             return try context
                 .fetch(fetchRequest)
-                .compactMap {trackerRecordCoreData -> TrackerRecord? in
+                .compactMap { trackerRecordCoreData -> TrackerRecord? in
                     guard let trackerID = trackerRecordCoreData.trackerID,
-                          let date = trackerRecordCoreData.date else {
-                        return nil }
-                return TrackerRecord(trackerID: trackerID, date: date)
-            }
-            
+                          let date = trackerRecordCoreData.date else { return nil }
+                    return TrackerRecord(trackerID: trackerID, date: date)
+                }
         } catch {
-            print("Failed to fetch tracker records: \(error)")
+            print("❌ Failed to fetch tracker records: \(error)")
             return []
         }
     }
@@ -68,14 +69,14 @@ final class TrackerRecordStore {
         do {
             let results = try context.fetch(fetchRequest)
             guard let recordToDelete = results.first else {
-                print("No record found to delete for: \(trackerRecord)")
+                print("❌ No record found to delete for: \(trackerRecord)")
                 return
             }
             context.delete(recordToDelete)
             try context.save()
-            print("Record deleted: \(trackerRecord)")
+            print("✅ Record deleted: \(trackerRecord)")
         } catch {
-            print("Failed to delete record: \(error)")
+            print("❌ Failed to delete record: \(error)")
         }
     }
 }

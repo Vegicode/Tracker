@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import UIKit
 
 struct TrackerStoreUpdate {
     let insertedIndexes: IndexSet
@@ -25,9 +26,7 @@ protocol TrackerStoreProtocol {
 }
 
 final class TrackerStore: NSObject {
-    private var context: NSManagedObjectContext {
-           return DatabaseManager.shared.context
-       }
+    private var context: NSManagedObjectContext
     private let trackerCategoryStore = TrackerCategoryStore()
     private let uiColorSort = UIColorSort()
     private let daysValueTransformer = DaysValueTransformer()
@@ -40,9 +39,14 @@ final class TrackerStore: NSObject {
         case trackerNotFound
     }
     
-    static let shared = TrackerStore()
-    override init() {}
-   
+    init(context: NSManagedObjectContext = {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        fatalError("Unable to retrieve AppDelegate")
+    }
+        return appDelegate.persistentContainer.viewContext
+    }()) {
+        self.context = context
+    }
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
         
         let fetchRequest = TrackerCoreData.fetchRequest()
@@ -57,20 +61,12 @@ final class TrackerStore: NSObject {
         return fetchedResultsController
     }()
 }
-    
-extension TrackerStore: TrackerStoreProtocol {
-    var numberOfTrackers: Int {
-        fetchedResultsController.fetchedObjects?.count ?? .zero
-    }
-    
-    var numberOfSections: Int {
-        fetchedResultsController.sections?.count ?? .zero
-    }
-    
-    func numberOfRowsInSection(_ section: Int) -> Int {
-        fetchedResultsController.sections?[section].numberOfObjects ?? .zero
-    }
 
+extension TrackerStore: TrackerStoreProtocol {
+    var numberOfTrackers: Int { fetchedResultsController.fetchedObjects?.count ?? .zero }
+    var numberOfSections: Int { fetchedResultsController.sections?.count ?? .zero }
+    func numberOfRowsInSection(_ section: Int) -> Int { fetchedResultsController.sections?[section].numberOfObjects ?? .zero }
+    
     func addNewTracker(_ tracker: Tracker, toCategory category: TrackerCategory) throws {
         print("Метод addNewTracker вызван")
         guard let categoryCoreData = trackerCategoryStore.getCategoryByTitle(category.title) else {
@@ -85,11 +81,12 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.schedule = tracker.schedule as NSObject
         trackerCoreData.type = trackerTypeValueTransformer.transformedValue(tracker.type) as? String
         trackerCoreData.category = categoryCoreData
+        categoryCoreData.addToTrackers(trackerCoreData)
         do {
             try context.save()
             print("Трекер успешно добавлен в базу данных")
             try fetchedResultsController.performFetch()
-                print("Обновленные трекеры: \(fetchedResultsController.fetchedObjects ?? [])")
+            print("Обновленные трекеры: \(fetchedResultsController.fetchedObjects ?? [])")
         } catch {
             print("Ошибка при сохранении контекста: \(error.localizedDescription)")
         }
@@ -109,26 +106,25 @@ extension TrackerStore: TrackerStoreProtocol {
             fetchedResultsController.fetchRequest.predicate = nil
             return tracker
         } catch {
-            print("Failed to fetch tracker by UUID: \(error)")
+            print("❌ Failed to fetch tracker by UUID: \(error)")
             return nil
         }
     }
 }
-    
+
 extension TrackerStore: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         insertedIndexes = IndexSet()
         deletedIndexes = IndexSet()
     }
-
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let insert = insertedIndexes, let deleted = deletedIndexes else {
-            return
-        }
+        guard let insert = insertedIndexes, let deleted = deletedIndexes else { return }
+        
         delegate?.didUpdate(TrackerStoreUpdate(
-                insertedIndexes: insertedIndexes!,
-                deletedIndexes: deletedIndexes!
-            )
+            insertedIndexes: insert,
+            deletedIndexes: deleted
+        )
         )
         insertedIndexes = nil
         deletedIndexes = nil
@@ -138,13 +134,11 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         
         switch type {
         case .delete:
-            if let indexPath = indexPath {
-                deletedIndexes?.insert(indexPath.item)
-            }
+            guard let indexPath else { return }
+            deletedIndexes?.insert(indexPath.item)
         case .insert:
-            if let indexPath = newIndexPath {
-                insertedIndexes?.insert(indexPath.item)
-            }
+            guard let newIndexPath else { return }
+            insertedIndexes?.insert(newIndexPath.item)
         default:
             break
         }

@@ -146,13 +146,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         return view
     }()
     
-    private let emojis = [
-        "😊", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
-    ]
-
-    private let colors: [UIColor] = [
-        .colorSelection1, .colorSelection2, .colorSelection3, .colorSelection4, .colorSelection5, .colorSelection6, .colorSelection7, .colorSelection8, .colorSelection9, .colorSelection10, .colorSelection11, .colorSelection12, .colorSelection13, .colorSelection14, .colorSelection15, .colorSelection16, .colorSelection17, .colorSelection18
-    ]
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -178,8 +172,8 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         let interItemSpacing: CGFloat = 5
 
        
-        let emojiRows = ceil(CGFloat(emojis.count) / itemsPerRow)
-        let colorRows = ceil(CGFloat(colors.count) / itemsPerRow)
+        let emojiRows = ceil(CGFloat(Constants.emojis.count) / itemsPerRow)
+        let colorRows = ceil(CGFloat(Constants.colors.count) / itemsPerRow)
         
 
         let emojiHeight = emojiRows * itemHeight + max(emojiRows - 1, 0) * interItemSpacing
@@ -419,9 +413,9 @@ extension TrackerIrregularEventViewController: UICollectionViewDataSource {
         numberOfItemsInSection section: Int
     ) -> Int {
         if collectionView == emojiCollectionView {
-            return emojis.count
+            return Constants.emojis.count
         } else if collectionView == colorCollectionView {
-            return colors.count
+            return Constants.colors.count
         }
         return 0
     }
@@ -434,14 +428,14 @@ extension TrackerIrregularEventViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as? TrackerHabbitViewCell else {
                 return UICollectionViewCell()
             }
-            cell.titleLabel.text = emojis[indexPath.row]
+            cell.titleLabel.text = Constants.emojis[indexPath.row]
             cell.colorView.isHidden = true
             return cell
         } else if collectionView == colorCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as? TrackerHabbitViewCell else {
                 return UICollectionViewCell()
             }
-            cell.innerColorView.backgroundColor = colors[indexPath.row]
+            cell.innerColorView.backgroundColor = Constants.colors[indexPath.row]
             cell.titleLabel.isHidden = true
             cell.colorView.isHidden = false
             return cell
@@ -457,9 +451,9 @@ extension TrackerIrregularEventViewController: UICollectionViewDelegate {
         cell.titleLabel.backgroundColor = .lightGrayYp
         
         if collectionView == emojiCollectionView {
-            selectedEmoji = emojis[indexPath.row]
+            selectedEmoji = Constants.emojis[indexPath.row]
         } else if collectionView == colorCollectionView {
-            selectedColor = colors[indexPath.row]
+            selectedColor = Constants.colors[indexPath.row]
             cell.colorView.layer.borderColor = selectedColor?.withAlphaComponent(0.3).cgColor
         }
     }

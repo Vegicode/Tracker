@@ -10,7 +10,6 @@ import UIKit
 final class TrackersViewController: UIViewController {
     
     private lazy var addTrackerButton: UIButton = {
-        
         let addView = UIButton.systemButton(
             with: UIImage(named: "plus") ?? UIImage(),
             target: nil,
@@ -18,7 +17,7 @@ final class TrackersViewController: UIViewController {
         )
         addView.tintColor = .blackDayYp
         addView.translatesAutoresizingMaskIntoConstraints = false
-        addView.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        addView.addTarget(self, action: #selector(addTrackerButtonTapped), for: .touchUpInside)
         return addView
     }()
     
@@ -209,34 +208,7 @@ final class TrackersViewController: UIViewController {
         datePickerValueChanged()
     }
     
-    @objc private func didReceiveNewTrackerNotification(_ notification: Notification){
-        guard let newTracker = notification.object as? Tracker else { return }
-        
-        var updatedCategories: [TrackerCategory] = []
-        
-        var trackerAdded = false
-        
-        for category in categories {
-            if category.title == "Нужная категория" {
-                var updatedTrackers = category.trackers
-                updatedTrackers.append(newTracker)
-                
-                let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
-                updatedCategories.append(updatedCategory)
-                trackerAdded = true
-            } else {
-                updatedCategories.append(category)
-            }
-        }
-        
-        if !trackerAdded {
-            let newCategory = TrackerCategory(title: "Новая категория", trackers: [newTracker])
-            updatedCategories.append(newCategory)
-        }
-        
-        categories = updatedCategories
-        updateUI()
-    }
+    
     
     
     
@@ -247,8 +219,9 @@ final class TrackersViewController: UIViewController {
 
     
     @objc
-    private func didTapButton() {
+    private func addTrackerButtonTapped() {
         let trackerCreateVC = TrackerCreateViewController()
+        trackerCreateVC.trackerViewController = self
         if let navigationController = self.navigationController{
             navigationController.pushViewController(trackerCreateVC, animated: true)
         }else{
@@ -305,14 +278,15 @@ final class TrackersViewController: UIViewController {
     }
     
     private func isTrackerCompletedToday(id: UUID) -> Bool {
+        let allRecords = trackerRecordStore.fetchAllRecords()
         if let tracker = filteredCategories
             .flatMap({ $0.trackers })
             .first(where: { $0.id == id }),
            tracker.type == .event {
-            return completedTrackers.contains { $0.trackerID == id }
+            return allRecords.contains { $0.trackerID == id }
         }
 
-        return completedTrackers.contains {
+        return allRecords.contains {
             $0.trackerID == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date)
         }
     }
@@ -385,51 +359,57 @@ extension TrackersViewController: TrackerCellDelegate {
                 .first(where: { $0.id == id }) else { return }
 
         
-        if tracker.type == .habbit {
-            let isAlreadyCompleted = completedTrackers.contains {
-                $0.trackerID == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date)
+        let record: TrackerRecord? = {
+            switch tracker.type {
+            case .habbit:
+                return trackerRecordStore
+                    .fetchAllRecords()
+                    .first { $0.trackerID == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date) }
+            case .event:
+                return trackerRecordStore
+                    .fetchAllRecords()
+                    .first { $0.trackerID == id }
             }
-            guard !isAlreadyCompleted else { return }
+        }()
 
-            let trackerRecord = TrackerRecord(trackerID: id, date: datePicker.date)
-            completedTrackers.append(trackerRecord)
+        if let record {
+            trackerRecordStore.deleteRecord(for: record)
+        } else {
+            let newRecord = TrackerRecord(trackerID: id, date: tracker.type == .habbit ? datePicker.date : Date.distantPast)
+            trackerRecordStore.addTrackerRecord(with: newRecord)
         }
-
-       
-        else if tracker.type == .event {
-            if completedTrackers.contains(where: { $0.trackerID == id }) {
-                uncompleteTracker(id: id, at: indexPath)
-                return
-            } else {
-                completedTrackers.append(TrackerRecord(trackerID: id, date: Date.distantPast))
-            }
-        }
-
+        getCompletedTrackers()
         collectionView.reloadItems(at: [indexPath])
+        collectionView.reloadData()
     }
     
     func uncompleteTracker(id: UUID, at indexPath: IndexPath) {
         guard let tracker = filteredCategories
-                .flatMap({ $0.trackers })
-                .first(where: { $0.id == id }) else { return }
-
-       
+            .flatMap({ $0.trackers })
+            .first(where: { $0.id == id }) else { return }
+        
+        
         if tracker.type == .habbit {
-            completedTrackers.removeAll { trackerRecord in
-                trackerRecord.trackerID == id &&
-                Calendar.current.isDate(trackerRecord.date, inSameDayAs: datePicker.date)
+            if tracker.type == .habbit {
+                if let record = trackerRecordStore.fetchAllRecords().first(where: {$0.trackerID == id && Calendar.current.isDate($0.date, inSameDayAs: datePicker.date)
+                }) {
+                    trackerRecordStore.deleteRecord(for: record)
+                }
             }
         }
-
-       
+        
+        
         else if tracker.type == .event {
-            completedTrackers.removeAll { $0.trackerID == id }
+            if let record = trackerRecordStore
+                .fetchAllRecords()
+                .first(where: { $0.trackerID == id }) {
+                trackerRecordStore.deleteRecord(for: record)
+            }
         }
-
+        getCompletedTrackers()
         collectionView.reloadItems(at: [indexPath])
+        collectionView.reloadData()
     }
-    
-    
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {

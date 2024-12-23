@@ -1,9 +1,3 @@
-//
-//  TrackerCategoryStore.swift
-//  EmojiMixer
-//
-//  Created by Mac on 27.11.2024.
-//
 import UIKit
 
 @objc

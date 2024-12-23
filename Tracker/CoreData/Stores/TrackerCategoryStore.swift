@@ -6,27 +6,25 @@
 //
 
 import CoreData
+import UIKit
 
 final class TrackerCategoryStore {
-    private var context: NSManagedObjectContext{
-        return DatabaseManager.shared.context
-    }
+    private var context: NSManagedObjectContext
     
-    static let shared = TrackerCategoryStore()
-     init(){}
-    private let daysValueTransformer = DaysValueTransformer()
-    private let trackerTyperValueTransformer = TrackerTypeValueTransformer()
+    init(context: NSManagedObjectContext = {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Unable to retrieve AppDelegate")
+        }
+        return appDelegate.persistentContainer.viewContext
+    }()) {
+        self.context = context
+    }
 
     enum TrackerCategoryStoreError: Error {
         case categoryNotFound
-        case trackerNotFound
     }
 
-    
-    
-    func performContextOperation(_ operation: (NSManagedObjectContext) -> Void) {
-        operation(context)
-    }
+
     
     func createCategory(with category: TrackerCategory) {
         let categoryEntity = TrackerCategoryCoreData(context: context)
@@ -68,11 +66,12 @@ final class TrackerCategoryStore {
                 }
             return categories
         } catch {
-            print(" Failed to fetch categories: \(error)")
+            print("❌ Failed to fetch categories: \(error)")
             return []
         }
     }
 
+    // Удалить категорию по названию
     func deleteCategory(byTitle title: String) throws {
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", title)
@@ -88,23 +87,19 @@ final class TrackerCategoryStore {
 
 extension TrackerCategoryStore {
     private func decodingCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) -> TrackerCategory? {
-        guard
-            let title = trackerCategoryCoreData.title
-        else {
-            print("Failed to decode category: title is missing")
+        guard let title = trackerCategoryCoreData.title else {
+            print("❌ Failed to decode category: title is missing")
             return nil
         }
         guard let trackerCoreDataSet = trackerCategoryCoreData.trackers as? Set<TrackerCoreData> else {
-            print("Failed to decode category: title is missing")
+            print("❌ Failed to decode category: trackers data is invalid")
             return nil
         }
-        
         let trackers = trackerCoreDataSet.compactMap { Tracker(from: $0) }
         
         if trackers.isEmpty {
-            print("Decoded category with no trackers: \(title)")
+            print("⚠️ Decoded category with no trackers: \(title)")
         }
-        
         return TrackerCategory(title: title, trackers: trackers)
     }
 }

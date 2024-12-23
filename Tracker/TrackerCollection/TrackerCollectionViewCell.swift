@@ -12,7 +12,7 @@ protocol TrackerCellDelegate: AnyObject {
     func uncompleteTracker(id: UUID, at indexPath: IndexPath)
 }
 
-class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     let emojiLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
