@@ -9,17 +9,12 @@ import CoreData
 import UIKit
 
 final class TrackerRecordStore {
-    private var context: NSManagedObjectContext
-    private let trackerStore = TrackerStore()
-    
-    init(context: NSManagedObjectContext = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            fatalError("Unable to retrieve AppDelegate")
-        }
-        return appDelegate.persistentContainer.viewContext
-    }()) {
-        self.context = context
+    private var context: NSManagedObjectContext {
+        return DatabaseManager.shared.persistentContainer.viewContext
     }
+     let trackerStore = TrackerStore()
+    
+    
     
     // MARK: FUNCTIONS
     func addTrackerRecord(with trackerRecord: TrackerRecord) {

@@ -10,6 +10,7 @@
 		501AFECF2D0AD92D0022F8D1 /* StoreErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501AFECE2D0AD92D0022F8D1 /* StoreErrors.swift */; };
 		501AFED32D0AEE520022F8D1 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501AFED22D0AEE520022F8D1 /* DataBaseManager.swift */; };
 		50322A8F2D10A0DA0010A38E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50322A8E2D10A0DA0010A38E /* Constants.swift */; };
+		50322A992D1A0D220010A38E /* TrackerIrregularEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50322A982D1A0D220010A38E /* TrackerIrregularEventViewController.swift */; };
 		504141012CFE378700A75A58 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141002CFE378700A75A58 /* TrackerStore.swift */; };
 		504141032CFEEE4500A75A58 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141022CFEEE4500A75A58 /* TrackerCategoryStore.swift */; };
 		504141052CFEEE9400A75A58 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504141042CFEEE9400A75A58 /* TrackerRecordStore.swift */; };
@@ -25,7 +26,6 @@
 		5089161C2CEE491900AADB31 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089160D2CEE491900AADB31 /* Statistics.swift */; };
 		5089161D2CEE491900AADB31 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089160E2CEE491900AADB31 /* TabBarController.swift */; };
 		5089161E2CEE491900AADB31 /* TrackerCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5089160F2CEE491900AADB31 /* TrackerCreateViewController.swift */; };
-		5089161F2CEE491900AADB31 /* TrackerIrregularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508916102CEE491900AADB31 /* TrackerIrregularViewController.swift */; };
 		508916202CEE491900AADB31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5089160A2CEE491900AADB31 /* Assets.xcassets */; };
 		508916252CEE5BDA00AADB31 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508916242CEE5BDA00AADB31 /* Tracker.swift */; };
 		508916272CEE5BFC00AADB31 /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508916262CEE5BFC00AADB31 /* TrackerCategory.swift */; };
@@ -43,6 +43,7 @@
 		501AFECE2D0AD92D0022F8D1 /* StoreErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreErrors.swift; sourceTree = "<group>"; };
 		501AFED22D0AEE520022F8D1 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
 		50322A8E2D10A0DA0010A38E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		50322A982D1A0D220010A38E /* TrackerIrregularEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerIrregularEventViewController.swift; sourceTree = "<group>"; };
 		504141002CFE378700A75A58 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		504141022CFEEE4500A75A58 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		504141042CFEEE9400A75A58 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		5089160D2CEE491900AADB31 /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		5089160E2CEE491900AADB31 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		5089160F2CEE491900AADB31 /* TrackerCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreateViewController.swift; sourceTree = "<group>"; };
-		508916102CEE491900AADB31 /* TrackerIrregularViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerIrregularViewController.swift; sourceTree = "<group>"; };
 		508916222CEE4B8D00AADB31 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		508916242CEE5BDA00AADB31 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		508916262CEE5BFC00AADB31 /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 				5089160D2CEE491900AADB31 /* Statistics.swift */,
 				5089160E2CEE491900AADB31 /* TabBarController.swift */,
 				5089160F2CEE491900AADB31 /* TrackerCreateViewController.swift */,
-				508916102CEE491900AADB31 /* TrackerIrregularViewController.swift */,
+				50322A982D1A0D220010A38E /* TrackerIrregularEventViewController.swift */,
 				508F97942CF7883800795D14 /* CoreData */,
 			);
 			path = Tracker;
@@ -286,6 +286,7 @@
 				508F97AA2CF79D9900795D14 /* DaysValueTranformer.swift in Sources */,
 				508F97AB2CF79D9900795D14 /* TrackerTypeValueTransformer.swift in Sources */,
 				504141012CFE378700A75A58 /* TrackerStore.swift in Sources */,
+				50322A992D1A0D220010A38E /* TrackerIrregularEventViewController.swift in Sources */,
 				508F97AC2CF79D9900795D14 /* UIColorSort.swift in Sources */,
 				504141032CFEEE4500A75A58 /* TrackerCategoryStore.swift in Sources */,
 				508916272CEE5BFC00AADB31 /* TrackerCategory.swift in Sources */,
@@ -295,7 +296,6 @@
 				508F979B2CF7892400795D14 /* Model.xcdatamodeld in Sources */,
 				508916252CEE5BDA00AADB31 /* Tracker.swift in Sources */,
 				5089161E2CEE491900AADB31 /* TrackerCreateViewController.swift in Sources */,
-				5089161F2CEE491900AADB31 /* TrackerIrregularViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

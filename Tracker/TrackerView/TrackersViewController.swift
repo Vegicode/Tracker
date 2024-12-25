@@ -112,7 +112,7 @@ final class TrackersViewController: UIViewController {
     //    ]
     var categories: [TrackerCategory] = []
     private var filteredCategories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
+    var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
     private let trackerCategoryStore = TrackerCategoryStore()
     private var trackerStore = TrackerStore()
@@ -198,7 +198,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func getCompletedTrackers(){
-        completedTrackers = trackerRecordStore.fetchAllRecords()
+        completedTrackers = Set(trackerRecordStore.fetchAllRecords())
         print("completedTrackers", completedTrackers)
     }
     

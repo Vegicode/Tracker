@@ -4,9 +4,8 @@
 //
 //  Created by Mac on 02.12.2024.
 //
-
+import Foundation
 import CoreData
-import UIKit
 
 struct TrackerStoreUpdate {
     let insertedIndexes: IndexSet
@@ -26,8 +25,13 @@ protocol TrackerStoreProtocol {
 }
 
 final class TrackerStore: NSObject {
-    private var context: NSManagedObjectContext
-    private let trackerCategoryStore = TrackerCategoryStore()
+    
+    static let shared = TrackerStore()
+     override init() {}
+    private var context: NSManagedObjectContext {
+        return DatabaseManager.shared.persistentContainer.viewContext
+    }
+     let trackerCategoryStore = TrackerCategoryStore()
     private let uiColorSort = UIColorSort()
     private let daysValueTransformer = DaysValueTransformer()
     private let trackerTypeValueTransformer = TrackerTypeValueTransformer()
@@ -39,14 +43,7 @@ final class TrackerStore: NSObject {
         case trackerNotFound
     }
     
-    init(context: NSManagedObjectContext = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-        fatalError("Unable to retrieve AppDelegate")
-    }
-        return appDelegate.persistentContainer.viewContext
-    }()) {
-        self.context = context
-    }
+    
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
         
         let fetchRequest = TrackerCoreData.fetchRequest()

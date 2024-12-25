@@ -4,22 +4,17 @@
 //
 //  Created by Mac on 03.12.2024.
 //
-
+import Foundation
 import CoreData
-import UIKit
 
-final class TrackerCategoryStore {
-    private var context: NSManagedObjectContext
-    
-    init(context: NSManagedObjectContext = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            fatalError("Unable to retrieve AppDelegate")
-        }
-        return appDelegate.persistentContainer.viewContext
-    }()) {
-        self.context = context
+
+final class TrackerCategoryStore: NSObject {
+    private var context: NSManagedObjectContext {
+        return DatabaseManager.shared.persistentContainer.viewContext
     }
-
+    static let shared = TrackerStore()
+     override init() {}
+    
     enum TrackerCategoryStoreError: Error {
         case categoryNotFound
     }

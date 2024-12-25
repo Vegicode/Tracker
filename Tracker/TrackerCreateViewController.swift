@@ -21,7 +21,7 @@ final class TrackerCreateViewController: UIViewController {
     
     private lazy var addHabitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Привычка", for:  .normal)
+        button.setTitle("Привычка", for: .normal)
         button.tintColor = .black
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
@@ -31,19 +31,20 @@ final class TrackerCreateViewController: UIViewController {
         button.addTarget(self, action: #selector(didHabitButtonTap), for: .touchUpInside)
         return button
     }()
- 
-    private let addIrregEventButton: UIButton = {
-           let button = UIButton(type: .system)
-           button.setTitle("Нерегулярное событие", for: .normal)
-           button.tintColor = .black
-           button.setTitleColor(.white, for: .normal)
-           button.backgroundColor = .black
-           button.layer.cornerRadius = 16
-           button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-           button.translatesAutoresizingMaskIntoConstraints = false
+    
+    private lazy var addIrregEventButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Нерегулярное событие", for: .normal)
+        button.tintColor = .black
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didIrregEventButtonTap), for: .touchUpInside)
-           return button
-       }()
+        return button
+    }()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +57,7 @@ final class TrackerCreateViewController: UIViewController {
         view.addSubview(trackerCreateLabel)
         view.addSubview(addHabitButton)
         view.addSubview(addIrregEventButton)
-        
+
         setupConstraints()
     }
     
@@ -79,24 +80,40 @@ final class TrackerCreateViewController: UIViewController {
             addIrregEventButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
-   
-    @objc private func didHabitButtonTap(){
-        let trackerCreateVC = TrackerHabbitViewController()
-        if let navigationController = self.navigationController {
-            navigationController.pushViewController(trackerCreateVC, animated: true)
-        } else {
-            trackerCreateVC.modalPresentationStyle = .pageSheet
-            present(trackerCreateVC, animated: true, completion: nil)
-        }
-    }
-    @objc private func didIrregEventButtonTap() {
-        let trackerCreateVC = TrackerIrregularEventViewController()
-        if let navigationController = self.navigationController {
-            navigationController.pushViewController(trackerCreateVC, animated: true)
-        } else {
-            trackerCreateVC.modalPresentationStyle = .pageSheet
-            present(trackerCreateVC, animated: true, completion: nil)
-        }
-    }
     
+    @objc private func didHabitButtonTap() {
+        guard let trackerVC = trackerViewController else {
+            print("⚠️ TrackerViewController не установлен")
+            return
+        }
+
+        let trackerHabbitVC = trackerVC.trackerHabbitViewController
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(trackerHabbitVC, animated: true)
+            print("✅ Перешли с помощью pushViewController")
+        } else {
+            trackerHabbitVC.modalPresentationStyle = .pageSheet
+            present(trackerHabbitVC, animated: true) {
+                print("✅ Контроллер представлен модально")
+            }
+        }
+    }
+
+    @objc private func didIrregEventButtonTap() {
+        guard let trackerVC = trackerViewController else {
+            print("⚠️ TrackerViewController не установлен")
+            return
+        }
+
+        let trackerHabbitVC = trackerVC.trackerIrregularEventViewController
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(trackerHabbitVC, animated: true)
+            print("✅ Перешли с помощью pushViewController")
+        } else {
+            trackerHabbitVC.modalPresentationStyle = .pageSheet
+            present(trackerHabbitVC, animated: true) {
+                print("✅ Контроллер представлен модально")
+            }
+        }
+    }
 }
