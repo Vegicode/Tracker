@@ -23,6 +23,7 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     
     private lazy var titleTextField: UITextField = {
         let textField = PaddedTextField()
@@ -145,6 +146,14 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    var onTaskNameChanged: ((String?) -> Void)?
+   
+    
+    var taskName: String = "Без названия" {
+        didSet {
+            onTaskNameChanged?(taskName)
+        }
+    }
     
   
     
@@ -157,8 +166,16 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "optionCell")
         optionsTableView.tableFooterView = UIView()
         
+        onTaskNameChanged = { [weak self] name in
+            guard let self else { return }
+            self.updateCreateTaskButtonstate()
+        }
+        
         updateCollectionViewHeights()
         setupViewsWithoutStackView()
+        
+        
+        
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -186,31 +203,33 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
 
     
     @objc private func textFieldDidChange() {
-        guard let text = titleTextField.text else { return }
+        taskName = titleTextField.text ?? ""
         
-        if !text.isEmpty && selectedEmoji != nil && selectedColor != nil && text.count <= 38 {
-            createButton.isEnabled = true
-            createButton.backgroundColor = .blackDayYp
-            
-        } else {
-            createButton.isEnabled = false
-            createButton.backgroundColor = .grayYp
-        }
+//        if !text.isEmpty && selectedEmoji != nil && selectedColor != nil && text.count <= 38 {
+//            createButton.isEnabled = true
+//            createButton.backgroundColor = .blackDayYp
+//
+//        } else {
+//            createButton.isEnabled = false
+//            createButton.backgroundColor = .grayYp
+//        }
         
-        if text.count > 38 {
-            maxLengthLabel.isHidden = false
-        }else{
-            maxLengthLabel.isHidden = true
-           
-        }
+//        if text.count > 38 {
+//            maxLengthLabel.isHidden = false
+//        }else{
+//            maxLengthLabel.isHidden = true
+//
+//        }
     }
+    
+    
     
     @objc private func didTapCancelButton() {
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func didTapCreateButton() {
-        guard
+        guard isReadyToCreateTask(),
               let categoryTitle,
               let title = titleTextField.text, !title.isEmpty,
               let color = selectedColor,
@@ -232,6 +251,23 @@ final class TrackerIrregularEventViewController: UIViewController, UITableViewDa
         print("Создан новый трекер: \(newTracker)")
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
+   
+    
+    private func isReadyToCreateTask() -> Bool {
+        return selectedEmoji != nil && selectedColor != nil 
+    }
+    
+    
+    
+    func isCreatedButtonEnabled() -> Bool {
+        return isReadyToCreateTask()
+    }
+
+    private func updateCreateTaskButtonstate() {
+            createButton.isEnabled = isCreatedButtonEnabled()
+            createButton.backgroundColor = isCreatedButtonEnabled() ? .blackDayYp : .grayYp
+        
+        }
 
     private func setupViewsWithoutStackView() {
         view.addSubview(irRegularTitle)

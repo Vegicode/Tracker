@@ -202,7 +202,6 @@ final class TrackerHabbitViewController: UIViewController, UITableViewDataSource
     }
     
     @objc private func didTapCreateButton() {
-        print("Selected schedule: \(selectedSchedule)")
         guard
             let categoryTitle,
             let title = titleTextField.text, !title.isEmpty,
