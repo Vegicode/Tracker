@@ -300,18 +300,18 @@ final class CreateTaskViewController: UIViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? viewModel.emojisInSection.count : viewModel.colorsInSection.count
+        return section == 0 ? Constants.emojisInSection.count : Constants.colorsInSection.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
             let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.reuseIdentifier, for: indexPath) as! EmojiCell
-            emojiCell.configure(with: viewModel.emojisInSection[indexPath.item], isSelected: false)
+            emojiCell.configure(with: Constants.emojisInSection[indexPath.item], isSelected: false)
             return emojiCell
         case 1:
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.reuseIdentifier, for: indexPath) as! ColorCell
-            colorCell.configure(with: viewModel.colorsInSection[indexPath.item], isSelected: false)
+            colorCell.configure(with: Constants.colorsInSection[indexPath.item], isSelected: false)
             return colorCell
         default:
             return UICollectionViewCell()
@@ -350,23 +350,23 @@ final class CreateTaskViewController: UIViewController,
         if indexPath.section == 0 {
             if let selectedEmoji = viewModel.selectedEmojiIndex {
                 if let previousCell = collectionView.cellForItem(at: IndexPath(item: selectedEmoji, section: indexPath.section)) as? EmojiCell {
-                    previousCell.configure(with: viewModel.emojisInSection[selectedEmoji], isSelected: false)
+                    previousCell.configure(with: Constants.emojisInSection[selectedEmoji], isSelected: false)
                 }
             }
             
             if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
-                cell.configure(with: viewModel.emojisInSection[indexPath.item], isSelected: true)
+                cell.configure(with: Constants.emojisInSection[indexPath.item], isSelected: true)
             }
             viewModel.selectedEmojiIndex = indexPath.item
         } else {
             if let selectedColor = viewModel.selectedColorIndex {
                 if let previousCell = collectionView.cellForItem(at: IndexPath(item: selectedColor, section: indexPath.section)) as? ColorCell {
-                    previousCell.configure(with: viewModel.colorsInSection[selectedColor], isSelected: false)
+                    previousCell.configure(with: Constants.colorsInSection[selectedColor], isSelected: false)
                 }
             }
             
             if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
-                cell.configure(with: viewModel.colorsInSection[indexPath.item], isSelected: true)
+                cell.configure(with: Constants.colorsInSection[indexPath.item], isSelected: true)
             }
             viewModel.selectedColorIndex = indexPath.item
         }
@@ -448,7 +448,7 @@ final class CreateTaskViewController: UIViewController,
         let padding: CGFloat = 5
         
         for section in 0..<numberOfSections {
-            let itemsInSection = section == 0 ? viewModel.emojisInSection.count : viewModel.colorsInSection.count
+            let itemsInSection = section == 0 ? Constants.emojisInSection.count : Constants.colorsInSection.count
             let rows = ceil(CGFloat(itemsInSection) / itemsPerRow) // Округление вверх
             let rowHeight = (UIScreen.main.bounds.width - (padding * (itemsPerRow - 1))) / itemsPerRow
             totalHeight += rows * rowHeight

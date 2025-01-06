@@ -1,5 +1,5 @@
 
-import UIKit
+import Foundation
 
 final class CreateTaskViewModel {
     
@@ -27,16 +27,7 @@ final class CreateTaskViewModel {
     }
     var selectedEmojiIndex: Int?
     var selectedColorIndex: Int?
-    let emojisInSection: [String] = [
-        "😊", "😻", "🌸", "🐶", "❤️", "😱",
-        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
-        "🥦", "🏓", "🏅", "🎸", "🏖", "😪"]
-    
-    let colorsInSection: [UIColor] = [
-        .r1С1Red,       .r1C2Orange,    .r1C3Blue,         .r1C4LightPurple, .r1C5Emerald,    .r1C6DarkPink,
-        .r2C1LightPink, .r2C2LightBlue, .r2C3LightGreen,   .r2C4DarkPurple,  .r2C5DarkOrange, .r2C6Pink,
-        .r3C1Sandy,     .r3C2Сornflower,.r3C3Purple,       .r3C4DarkPink,    .r3C5ApsidBlue,  .r3C6LimeGreen
-    ]
+  
     var onTaskCreated: ((Tracker) -> Void)?
     var onSectionsUpdated: (() -> Void)?
     var onTaskNameChanged: ((String?) -> Void)?
@@ -77,8 +68,8 @@ final class CreateTaskViewModel {
         
         let tracker = Tracker(id: UUID(),
                               name: taskName,
-                              color: colorsInSection[selectedColorIndex],
-                              emoji: emojisInSection[selectedEmojiIndex],
+                              color: Constants.colorsInSection[selectedColorIndex],
+                              emoji: Constants.emojisInSection[selectedEmojiIndex],
                               schedule: getTaskSchedule())
         
         StoreManager.shared.trackerStore.createTracker(entity: tracker,
