@@ -1,11 +1,14 @@
  
 import UIKit
+import AppMetricaCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         DaysValueTransformer.register()
+        let configuration = AppMetricaConfiguration(apiKey: "1f083785-8a69-4b2a-9be3-4ce18da513e0")
+        AppMetrica.activate(with: configuration!)
         return true
     }
     

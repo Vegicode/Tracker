@@ -8,8 +8,9 @@ final class CreateTaskViewController: UIViewController,
     
     // MARK: - Properties
     
-    var onTaskCreated: (() -> Void)?
+    var onTaskSaved: (() -> Void)?
     var onClose: (() -> Void)?
+    var onTaskEdited: (() -> Void)?
     
     private let viewModel: CreateTaskViewModel
     
@@ -50,6 +51,7 @@ final class CreateTaskViewController: UIViewController,
         textField.backgroundColor = .ccLightGray
         textField.clipsToBounds = true
         textField.layer.cornerRadius = 16
+        textField.heightAnchor.constraint(equalToConstant: 75).isActive = true
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         return textField
     }()
@@ -61,6 +63,21 @@ final class CreateTaskViewController: UIViewController,
         label.numberOfLines = 0
         label.isHidden = true
         return label
+    }()
+    
+    private lazy var onEditDaysRepeatCounterLabel: UILabel = {
+        let label = UILabel()
+        label.configureLabel(font: .boldSystemFont(ofSize: 32), textColor: .ccBlack, aligment: .center)
+        return label
+    }()
+    
+    private lazy var taskDetailsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [titleViewController, onEditDaysRepeatCounterLabel,
+                                                       taskNameField, taskNameLengthWarning])
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        stackView.spacing = 40
+        return stackView
     }()
     
     private lazy var collectionViewLayout: UICollectionViewFlowLayout = {
@@ -114,8 +131,11 @@ final class CreateTaskViewController: UIViewController,
     
     // MARK: - Initialization
     
-    init(viewModel: CreateTaskViewModel) {
+    init(viewModel: CreateTaskViewModel, editingTask: Tracker?, completedDays: Int?, taskCategory: String?) {
         self.viewModel = viewModel
+        self.viewModel.editingTask = editingTask
+        self.viewModel.completedDays = completedDays
+        self.viewModel.taskCategory = taskCategory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -156,19 +176,30 @@ final class CreateTaskViewController: UIViewController,
     // MARK: - UI Setup
     
     private func configureUI() {
-        view.backgroundColor = .white
-        
+        view.backgroundColor = .ccWhite
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        [titleViewController, taskNameField, taskNameLengthWarning,
-         selectionTableView, collectionView, stackViewButtons].forEach {
+        [taskDetailsStackView, selectionTableView,
+         collectionView, stackViewButtons].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
-        titleViewController.text = viewModel.taskType == .habit ? "Новая привычка" : "Новое нерегулярное событие"
-        collectionView.layoutIfNeeded()
         
+        updateOnEditDaysRepeatCounterVisibility(isVisible: false)
+        
+        switch viewModel.taskType {
+        case .habit:
+            titleViewController.text = "Новая привычка"
+        case .irregularEvent:
+            titleViewController.text = "Новое нерегулярное событие"
+        case .underEditing:
+            titleViewController.text = "Редактирование привычки"
+            updateOnEditDaysRepeatCounterVisibility(isVisible: true)
+            setupEditingData()
+        }
+        
+        collectionView.layoutIfNeeded()
         updateCreateTaskButtonstate()
     }
     
@@ -187,20 +218,12 @@ final class CreateTaskViewController: UIViewController,
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            titleViewController.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            titleViewController.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 35),
+            taskDetailsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            taskDetailsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            taskDetailsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            taskDetailsStackView.bottomAnchor.constraint(equalTo: selectionTableView.topAnchor, constant: -32),
             
-            taskNameField.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            taskNameField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            taskNameField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            taskNameField.heightAnchor.constraint(equalToConstant: 75),
-            taskNameField.topAnchor.constraint(equalTo: titleViewController.bottomAnchor, constant: 38),
-            
-            taskNameLengthWarning.topAnchor.constraint(equalTo: taskNameField.bottomAnchor, constant: 8),
-            taskNameLengthWarning.leadingAnchor.constraint(equalTo: taskNameField.leadingAnchor),
-            taskNameLengthWarning.trailingAnchor.constraint(equalTo: taskNameField.trailingAnchor),
-            
-            selectionTableView.topAnchor.constraint(equalTo: taskNameLengthWarning.bottomAnchor, constant: 32),
+            selectionTableView.topAnchor.constraint(equalTo: taskDetailsStackView.bottomAnchor, constant: 32),
             selectionTableView.leadingAnchor.constraint(equalTo: taskNameField.leadingAnchor),
             selectionTableView.trailingAnchor.constraint(equalTo: taskNameField.trailingAnchor),
             
@@ -271,7 +294,7 @@ final class CreateTaskViewController: UIViewController,
         tableView.deselectRow(at: indexPath, animated: false)
         
         if indexPath.row == 0 {
-            let setCategoryVC = CategorySelectionViewController(viewModel: CategorySelectionViewModel())
+            let setCategoryVC = CategorySelectionViewController(viewModel: CategorySelectionViewModel(), selectedCategory: viewModel.taskCategory)
             
             setCategoryVC.onCategorySelected = { [weak self] category in
                 guard let self else { return }
@@ -300,18 +323,20 @@ final class CreateTaskViewController: UIViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? Constants.emojisInSection.count : Constants.colorsInSection.count
+        return section == 0 ? viewModel.emojisInSection.count : viewModel.colorsInSection.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
             let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.reuseIdentifier, for: indexPath) as! EmojiCell
-            emojiCell.configure(with: Constants.emojisInSection[indexPath.item], isSelected: false)
+            let isSelected = viewModel.selectedEmojiIndex == indexPath.item
+            emojiCell.configure(with: viewModel.emojisInSection[indexPath.item], isSelected: isSelected)
             return emojiCell
         case 1:
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.reuseIdentifier, for: indexPath) as! ColorCell
-            colorCell.configure(with: Constants.colorsInSection[indexPath.item], isSelected: false)
+            let isSelected = viewModel.selectedColorIndex == indexPath.item
+            colorCell.configure(with: viewModel.colorsInSection[indexPath.item], isSelected: isSelected)
             return colorCell
         default:
             return UICollectionViewCell()
@@ -350,23 +375,23 @@ final class CreateTaskViewController: UIViewController,
         if indexPath.section == 0 {
             if let selectedEmoji = viewModel.selectedEmojiIndex {
                 if let previousCell = collectionView.cellForItem(at: IndexPath(item: selectedEmoji, section: indexPath.section)) as? EmojiCell {
-                    previousCell.configure(with: Constants.emojisInSection[selectedEmoji], isSelected: false)
+                    previousCell.configure(with: viewModel.emojisInSection[selectedEmoji], isSelected: false)
                 }
             }
             
             if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell {
-                cell.configure(with: Constants.emojisInSection[indexPath.item], isSelected: true)
+                cell.configure(with: viewModel.emojisInSection[indexPath.item], isSelected: true)
             }
             viewModel.selectedEmojiIndex = indexPath.item
         } else {
             if let selectedColor = viewModel.selectedColorIndex {
                 if let previousCell = collectionView.cellForItem(at: IndexPath(item: selectedColor, section: indexPath.section)) as? ColorCell {
-                    previousCell.configure(with: Constants.colorsInSection[selectedColor], isSelected: false)
+                    previousCell.configure(with: viewModel.colorsInSection[selectedColor], isSelected: false)
                 }
             }
             
             if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
-                cell.configure(with: Constants.colorsInSection[indexPath.item], isSelected: true)
+                cell.configure(with: viewModel.colorsInSection[indexPath.item], isSelected: true)
             }
             viewModel.selectedColorIndex = indexPath.item
         }
@@ -406,7 +431,7 @@ final class CreateTaskViewController: UIViewController,
             button.applyCustomStyle(title: title,
                                     forState: .normal,
                                     titleFont: .boldSystemFont(ofSize: 16),
-                                    titleColor: .white,
+                                    titleColor: .ccWhite,
                                     titleColorState: .normal,
                                     backgroundColor: .ccGray,
                                     cornerRadius: 16)
@@ -438,7 +463,12 @@ final class CreateTaskViewController: UIViewController,
     }
     
     private func getNumberOfRowsInSection() -> Int {
-        return viewModel.taskType == .habit ? viewModel.selectionButtonTitles.count : viewModel.selectionButtonTitles.dropLast().count
+        switch viewModel.taskType {
+        case .habit, .underEditing:
+            return viewModel.selectionButtonTitles.count
+        case .irregularEvent:
+            return viewModel.selectionButtonTitles.dropLast().count
+        }
     }
     
     private func calculateCollectionViewHeight() -> CGFloat {
@@ -448,7 +478,7 @@ final class CreateTaskViewController: UIViewController,
         let padding: CGFloat = 5
         
         for section in 0..<numberOfSections {
-            let itemsInSection = section == 0 ? Constants.emojisInSection.count : Constants.colorsInSection.count
+            let itemsInSection = section == 0 ? viewModel.emojisInSection.count : viewModel.colorsInSection.count
             let rows = ceil(CGFloat(itemsInSection) / itemsPerRow) // Округление вверх
             let rowHeight = (UIScreen.main.bounds.width - (padding * (itemsPerRow - 1))) / itemsPerRow
             totalHeight += rows * rowHeight
@@ -459,11 +489,41 @@ final class CreateTaskViewController: UIViewController,
         return totalHeight
     }
     
+    private func setupEditingData() {
+        viewModel.taskType = .underEditing
+        
+        if let completedDays = viewModel.completedDays {
+            onEditDaysRepeatCounterLabel.text = "\(completedDays) дней"
+        }
+        
+        viewModel.taskName = viewModel.editingTask?.name ?? "test name"
+        taskNameField.text = viewModel.taskName
+        
+        viewModel.taskSchedule = viewModel.editingTask?.schedule
+        
+        if let emoji = viewModel.editingTask?.emoji {
+            let emojiIndex = viewModel.emojisInSection.firstIndex(of: emoji)
+            viewModel.selectedEmojiIndex = emojiIndex
+        }
+        
+        if let color = viewModel.editingTask?.color.toHexString() {
+            let colorsInSectionInHex = viewModel.colorsInSection.map { $0.toHexString() }
+            let selectedColor = colorsInSectionInHex.firstIndex(of: color)
+            viewModel.selectedColorIndex = selectedColor
+        }
+    }
+    
+    private func updateOnEditDaysRepeatCounterVisibility(isVisible: Bool) {
+        onEditDaysRepeatCounterLabel.isHidden = !isVisible
+        taskDetailsStackView.setCustomSpacing(isVisible ? 16 : 0, after: titleViewController)
+    }
+    
     //MARK: - Actions
     
     @objc private func createTask() {
-        viewModel.createTask()
-        onTaskCreated?()
+        viewModel.saveTask()
+        onTaskSaved?()
+        if viewModel.taskType == .underEditing { dismiss(animated: true) }
         onClose?()
     }
     
