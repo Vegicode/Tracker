@@ -67,7 +67,7 @@ PODS:
     - KSCrash/Core
 
 DEPENDENCIES:
-  - AppMetricaAnalytics (~> 5.8.1)
+  - AppMetricaAnalytics
 
 SPEC REPOS:
   trunk:
@@ -108,6 +108,6 @@ SPEC CHECKSUMS:
   AppMetricaWebKit: 900bc1bdc8c35d0605a3dfe9ba8b8b69a77f73b8
   KSCrash: 946472c56073afdaf6bae37d886e3f562027075c
 
-PODFILE CHECKSUM: da3aa4f9f2668e888470c8a8bc21b83079e0f6b1
+PODFILE CHECKSUM: 84d4db10376e4ee10b10739070b2405676edf0ba
 
 COCOAPODS: 1.16.2

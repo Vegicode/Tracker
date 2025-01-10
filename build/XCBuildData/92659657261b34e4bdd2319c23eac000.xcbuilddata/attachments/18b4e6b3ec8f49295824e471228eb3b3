@@ -1,0 +1,5 @@
+ extern const unsigned char AppMetricaFMDBVersionString[];
+ extern const double AppMetricaFMDBVersionNumber;
+
+ const unsigned char AppMetricaFMDBVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaFMDB  PROJECT:Pods-1" "\n";
+ const double AppMetricaFMDBVersionNumber __attribute__ ((used)) = (double)1.;

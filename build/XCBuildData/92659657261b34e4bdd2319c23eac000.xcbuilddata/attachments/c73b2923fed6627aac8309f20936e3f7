@@ -1,0 +1,5 @@
+ extern const unsigned char AppMetricaNetworkVersionString[];
+ extern const double AppMetricaNetworkVersionNumber;
+
+ const unsigned char AppMetricaNetworkVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaNetwork  PROJECT:Pods-1" "\n";
+ const double AppMetricaNetworkVersionNumber __attribute__ ((used)) = (double)1.;

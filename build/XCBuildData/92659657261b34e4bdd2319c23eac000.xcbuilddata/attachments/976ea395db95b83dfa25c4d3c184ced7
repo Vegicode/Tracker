@@ -1,0 +1,5 @@
+ extern const unsigned char AppMetricaProtobufUtilsVersionString[];
+ extern const double AppMetricaProtobufUtilsVersionNumber;
+
+ const unsigned char AppMetricaProtobufUtilsVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaProtobufUtils  PROJECT:Pods-1" "\n";
+ const double AppMetricaProtobufUtilsVersionNumber __attribute__ ((used)) = (double)1.;

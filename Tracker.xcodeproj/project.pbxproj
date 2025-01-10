@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,7 +18,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4BCEAEAA2CA5766A004C4D46 /* Exceptions for "Tracker" folder in "Tracker" target */ = {
+		4BCEAEAA2CA5766A004C4D46 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -28,18 +28,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4BCEAE9A2CA57669004C4D46 /* Tracker */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4BCEAEAA2CA5766A004C4D46 /* Exceptions for "Tracker" folder in "Tracker" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = Tracker;
-			sourceTree = "<group>";
-		};
+		4BCEAE9A2CA57669004C4D46 /* Tracker */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (4BCEAEAA2CA5766A004C4D46 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Tracker; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
