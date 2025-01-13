@@ -6,6 +6,7 @@ target 'Tracker' do
   use_frameworks!
 
   # Pods for Tracker
-pod 'AppMetricaAnalytics', '~> 5.8.1'
+pod 'AppMetricaAnalytics', '~> 5.9.0'
 
 end
+
