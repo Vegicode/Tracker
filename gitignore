@@ -48,7 +48,7 @@ playground.xcworkspace
 # hence it is not needed unless you have added a package configuration file to your project
 # .swiftpm
 
-.build/
+build/
 
 # CocoaPods
 # We recommend against adding the Pods directory to your .gitignore. However
@@ -58,7 +58,7 @@ Pods/
 Podfile
 Podfile.lock
 # Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
+ *.xcworkspace
 
 # Carthage
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
