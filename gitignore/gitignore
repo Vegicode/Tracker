@@ -57,8 +57,6 @@ playground.xcworkspace
 Pods/
 Podfile
 Podfile.lock
-build/
-Tracker.xcworkspace
 # Add this line if you want to avoid checking in source code from the Xcode workspace
 # *.xcworkspace
 

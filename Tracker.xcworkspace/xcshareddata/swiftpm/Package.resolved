@@ -1,0 +1,24 @@
+{
+  "originHash" : "6f8a7cfc9929c2ac2e21ce15a8ad8eb77e68fe62e354702bba18018448afd960",
+  "pins" : [
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:pointfreeco/swift-snapshot-testing.git",
+      "state" : {
+        "revision" : "42a086182681cf661f5c47c9b7dc3931de18c6d7",
+        "version" : "1.17.6"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}
