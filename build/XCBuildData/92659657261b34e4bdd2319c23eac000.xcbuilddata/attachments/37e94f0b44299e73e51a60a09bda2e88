@@ -1,5 +1,0 @@
- extern const unsigned char AppMetricaHostStateVersionString[];
- extern const double AppMetricaHostStateVersionNumber;
-
- const unsigned char AppMetricaHostStateVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaHostState  PROJECT:Pods-1" "\n";
- const double AppMetricaHostStateVersionNumber __attribute__ ((used)) = (double)1.;

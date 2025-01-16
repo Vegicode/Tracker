@@ -1,5 +1,0 @@
- extern const unsigned char AppMetricaCrashesVersionString[];
- extern const double AppMetricaCrashesVersionNumber;
-
- const unsigned char AppMetricaCrashesVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaCrashes  PROJECT:Pods-1" "\n";
- const double AppMetricaCrashesVersionNumber __attribute__ ((used)) = (double)1.;

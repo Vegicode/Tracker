@@ -1,5 +1,0 @@
- extern const unsigned char AppMetricaLogVersionString[];
- extern const double AppMetricaLogVersionNumber;
-
- const unsigned char AppMetricaLogVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaLog  PROJECT:Pods-1" "\n";
- const double AppMetricaLogVersionNumber __attribute__ ((used)) = (double)1.;

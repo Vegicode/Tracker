@@ -1,5 +1,0 @@
- extern const unsigned char AppMetricaPlatformVersionString[];
- extern const double AppMetricaPlatformVersionNumber;
-
- const unsigned char AppMetricaPlatformVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaPlatform  PROJECT:Pods-1" "\n";
- const double AppMetricaPlatformVersionNumber __attribute__ ((used)) = (double)1.;

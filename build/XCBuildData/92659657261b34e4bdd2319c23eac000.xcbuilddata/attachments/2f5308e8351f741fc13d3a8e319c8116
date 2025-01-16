@@ -1,5 +1,0 @@
- extern const unsigned char AppMetricaWebKitVersionString[];
- extern const double AppMetricaWebKitVersionNumber;
-
- const unsigned char AppMetricaWebKitVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:AppMetricaWebKit  PROJECT:Pods-1" "\n";
- const double AppMetricaWebKitVersionNumber __attribute__ ((used)) = (double)1.;
