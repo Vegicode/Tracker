@@ -1,9 +1,3 @@
-//
-//  SettingTaskSelectionCell.swift
-//  Tracker
-//
-//  Created by Владимир Головин on 30.10.2024.
-//
 
 import UIKit
 

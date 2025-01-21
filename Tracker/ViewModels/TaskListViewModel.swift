@@ -1,9 +1,3 @@
-//
-//  TaskListViewModel.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 28.10.2024.
-//
 
 import UIKit
 import AppMetricaCore

@@ -1,10 +1,3 @@
-//
-//  TrackerRecordStore.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 03.11.2024.
-//
-
 import Foundation
 import CoreData
 

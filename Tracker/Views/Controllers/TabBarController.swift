@@ -1,10 +1,4 @@
-//
-//  TabBarController.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 26.09.2024.
-//
-
+ 
 import UIKit
 
 final class TabBarController: UITabBarController {

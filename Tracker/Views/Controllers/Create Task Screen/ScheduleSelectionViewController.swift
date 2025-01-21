@@ -1,10 +1,4 @@
-//
-//  SetSheduleViewController.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 08.10.2024.
-//
-
+ 
 import UIKit
 
 final class ScheduleSelectionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {

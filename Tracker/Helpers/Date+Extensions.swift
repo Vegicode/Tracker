@@ -1,10 +1,3 @@
-//
-//  Date+Extensions.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 14.11.2024.
-//
-
 import Foundation
 
 extension Date {

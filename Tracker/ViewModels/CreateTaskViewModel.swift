@@ -1,9 +1,3 @@
-//
-//  CreateTaskViewModel.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 16.10.2024.
-//
 
 import UIKit
 

@@ -1,10 +1,4 @@
-//
-//  TrackerTests.swift
-//  TrackerTests
-//
-//  Created by Mac on 20.01.2025.
-//
-
+ 
 import XCTest
 import SnapshotTesting
 @testable import Tracker

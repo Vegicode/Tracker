@@ -1,10 +1,3 @@
-//
-//  TrackerStore.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 03.11.2024.
-//
-
 import CoreData
 import UIKit
 

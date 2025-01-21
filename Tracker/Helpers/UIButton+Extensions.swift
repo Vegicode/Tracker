@@ -1,10 +1,4 @@
-//
-//  UIButton+Extensions.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 07.10.2024.
-//
-
+ 
 import UIKit
 
 extension UIButton {

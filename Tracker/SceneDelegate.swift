@@ -1,10 +1,4 @@
-//
-//  SceneDelegate.swift
-//  Tracker
-//
-//  Created by Niykee Moore on 26.09.2024.
-//
-
+ 
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
