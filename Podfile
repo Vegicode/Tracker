@@ -7,6 +7,4 @@ target 'Tracker' do
 
   # Pods for Tracker
 pod 'AppMetricaAnalytics', '~> 5.9.0'
-
 end
-

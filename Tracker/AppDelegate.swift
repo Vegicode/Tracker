@@ -1,4 +1,10 @@
- 
+//
+//  AppDelegate.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 26.09.2024.
+//
+
 import UIKit
 import AppMetricaCore
 
@@ -7,10 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         DaysValueTransformer.register()
-        let configuration = AppMetricaConfiguration(apiKey: "1f083785-8a69-4b2a-9be3-4ce18da513e0")
+        let configuration = AppMetricaConfiguration(apiKey: "b7effcd2-9d54-4fca-87bb-998ae960c8fb")
         AppMetrica.activate(with: configuration!)
         return true
-      
     }
     
     // MARK: UISceneSession Lifecycle

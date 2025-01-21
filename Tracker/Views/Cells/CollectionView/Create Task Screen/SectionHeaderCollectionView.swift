@@ -1,4 +1,10 @@
- 
+//
+//  SectionHeaderCollectionView.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 05.10.2024.
+//
+
 import UIKit
 
 final class SectionHeaderCollectionView: UICollectionReusableView {

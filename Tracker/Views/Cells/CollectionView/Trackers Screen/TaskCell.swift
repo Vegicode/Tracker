@@ -1,4 +1,11 @@
- 
+//
+//  Tracker Cell.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 09.10.2024.
+//
+
+
 import UIKit
 
 final class TaskCell: UICollectionViewCell {

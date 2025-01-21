@@ -1,4 +1,10 @@
- 
+//
+//  AlertPresenter.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 28.11.2024.
+//
+
 import UIKit
 
 final class AlertPresenter {

@@ -1,4 +1,10 @@
- 
+//
+//  PlaceholderView.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 02.12.2024.
+//
+
 import UIKit
 
 enum PlaceholderType {

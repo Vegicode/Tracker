@@ -1,4 +1,11 @@
+/*
+ Localizable.strings
+ Tracker
  
+ Created by Niykee Moore on 28.11.2024.
+ 
+ */
+
 // MARK: - Onboarding screen
 
 "title_first_screen" = "Отслеживайте только то, что хотите";

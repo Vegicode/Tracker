@@ -1,4 +1,10 @@
- 
+//
+//  OnboardingViewModel.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 20.11.2024.
+//
+
 import Foundation
 
 final class OnboardingViewModel {

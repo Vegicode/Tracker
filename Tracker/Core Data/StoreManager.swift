@@ -1,4 +1,10 @@
- 
+//
+//  StoreManager.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 15.11.2024.
+//
+
 import Foundation
 
 final class StoreManager {

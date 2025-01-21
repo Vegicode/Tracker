@@ -1,4 +1,10 @@
- 
+//
+//  UINavigationBar+Extensions.swift
+//  Tracker
+//
+//  Created by Niykee Moore on 26.09.2024.
+//
+
 import UIKit
 
 extension UINavigationController {
